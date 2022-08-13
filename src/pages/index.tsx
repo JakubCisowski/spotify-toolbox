@@ -8,10 +8,15 @@ import { trpc } from '../utils/trpc';
 const Home: NextPage = () => {
   const [playlistLink, setPlaylistLink] = useState('');
 
-  const { data, isLoading } = trpc.useQuery([
-    'example.hello',
-    { text: 'from tRPC' },
-  ]);
+  // const { data, isLoading } = trpc.useQuery([
+  //   'example.hello',
+  //   { text: 'from tRPC' },
+  // ]);
+
+  // const { data, isLoading } = trpc.useQuery([
+  //   'get-playlist-info',
+  //   { playlistId: '37i9dQZF1DXcxqeQiwUf1T' },
+  // ]);
 
   return (
     <>
@@ -21,15 +26,22 @@ const Home: NextPage = () => {
         <link rel="icon" href="/website-icon.ico" />
       </Head>
 
-      <div>{data ? <p>{data.greeting}</p> : <p>Loading..</p>}</div>
+      {/* <div>{data ? <p>{data.greeting}</p> : <p>Loading..</p>}</div> */}
 
-      <div>
-        <Logo />
-        <PlaylistSearchbar
-          playlistLink={playlistLink}
-          onPlaylistLinkChange={setPlaylistLink}
-        />
-        <TutorialSection />
+      <div className="body-wrapper">
+        <div className="logo">
+          <Logo />
+        </div>
+        <div className="searchbar">
+          <Searchbar
+            playlistLink={playlistLink}
+            onPlaylistLinkChange={setPlaylistLink}
+          />
+        </div>
+        <hr></hr>
+        <div className="tutorial">
+          <Tutorial />
+        </div>
       </div>
     </>
   );
@@ -39,15 +51,19 @@ function Logo() {
   return (
     <>
       <Link href="/">
-        <a className="logo-text">
-          <span className="green">spotify</span> toolbox • find playlist genre
+        <a>
+          <div className="logo-text">
+            <span className="green-text">spotify</span> toolbox
+          </div>
+          <br></br>
+          <div className="logo-subtext">• find playlist genre •</div>
         </a>
       </Link>
     </>
   );
 }
 
-function PlaylistSearchbar({
+function Searchbar({
   playlistLink,
   onPlaylistLinkChange,
 }: {
@@ -56,70 +72,95 @@ function PlaylistSearchbar({
 }) {
   return (
     <>
-      <form action="/playlist-genre" method="get">
-        <input
-          type="text"
-          name="link"
-          placeholder="paste spotify playlist link"
-          value={playlistLink}
-          onChange={(e) => onPlaylistLinkChange(e.target.value)}
-          className="input-text-style"
-        />
-        <input type="submit" value="analyze" className="input-submit-style" />
-      </form>
+      <div>
+        <form action="/playlist-genre" method="get">
+          <input
+            type="text"
+            name="link"
+            placeholder="paste spotify playlist link here"
+            value={playlistLink}
+            onChange={(e) => onPlaylistLinkChange(e.target.value)}
+            className="searchbar"
+          />
+          <div className="searchbar-button-wrapper">
+            <input
+              type="submit"
+              value="analyze!"
+              className="searchbar-button"
+            />
+          </div>
+        </form>
+      </div>
     </>
   );
 }
 
-function TutorialSection() {
+function Tutorial() {
   return (
     <>
-      <h3>how it works?</h3>
-      <p>1) copy spotify playlist link</p>
-      <Image
-        src="https://i.imgur.com/qyY8xR4.gif"
-        alt="tutorial1"
-        className="how-it-works-resource"
-        width={847}
-        height={631}
-      ></Image>
-      <p>2) paste it and click analyze</p>
-      <Image
-        src="https://i.imgur.com/XqQUuMo.gif"
-        alt="tutorial2"
-        className="how-it-works-resource"
-        width={1142}
-        height={137}
-      ></Image>
-      <p> 3) wait for the analysis to finish </p>
-      <Image
-        src="https://i.imgur.com/UnSukGJ.gif"
-        alt="tutorial3"
-        className="how-it-works-resource"
-        width={425}
-        height={162}
-      ></Image>
-      <p> 4) check analysis result </p>
-      <Image
-        src="https://i.imgur.com/JBV1uiX.png"
-        alt="tutorial4"
-        className="how-it-works-resource"
-        width={422}
-        height={694}
-      ></Image>
-      <p>
-        <span className="green">
+      <h3 className="tutorial-title">how it works?</h3>
+
+      <p className="tutorial-text">1) copy spotify playlist link</p>
+
+      <div className="image-wrapper">
+        <Image
+          src="https://i.imgur.com/qyY8xR4.gif"
+          alt="tutorial1"
+          width={847}
+          height={631}
+          className="tutorial-screenshot"
+        ></Image>
+      </div>
+
+      <p className="tutorial-text">2) paste it and click analyze</p>
+
+      <div className="image-wrapper">
+        <Image
+          src="https://i.imgur.com/XqQUuMo.gif"
+          alt="tutorial2"
+          className="tutorial-screenshot"
+          width={1142}
+          height={137}
+        ></Image>
+      </div>
+
+      <p className="tutorial-text"> 3) wait for the analysis to finish </p>
+
+      <div className="image-wrapper">
+        <Image
+          src="https://i.imgur.com/UnSukGJ.gif"
+          alt="tutorial3"
+          className="tutorial-screenshot"
+          width={425}
+          height={162}
+        ></Image>
+      </div>
+
+      <p className="tutorial-text"> 4) check analysis result </p>
+
+      <div className="image-wrapper">
+        <Image
+          src="https://i.imgur.com/JBV1uiX.png"
+          alt="tutorial4"
+          className="tutorial-screenshot"
+          width={422}
+          height={694}
+        ></Image>
+      </div>
+
+      <p className="tutorial-text">
+        <span className="green-text">
           <b>70</b>
           <span className="percentage">% </span>
         </span>
         this means that 70% of the tracks* in this playlist are classified by
         Spotify as a certain genre of music
       </p>
-      <p>
-        some tracks are <span className="red">not classified</span>, it&apos;s
-        indicated at the botom of analysis results
+      <p className="tutorial-text">
+        some tracks are <span className="red-text">not classified</span>,
+        it&apos;s indicated at the botom of analysis results
       </p>
-      <p> --- </p>
+      <hr></hr>
       <p className="side-note">
         <em>
           * actually Spotify classifies artists rather than tracks, so to be
