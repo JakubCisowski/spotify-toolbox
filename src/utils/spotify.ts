@@ -1,4 +1,4 @@
-const SpotifyWebApi = require('spotify-web-api-node');
+import SpotifyWebApi from 'spotify-web-api-node'; //? change to import
 
 var spotifyApi = new SpotifyWebApi({
   clientId: process.env.SPOTIFY_CLIENT_ID,
@@ -16,7 +16,7 @@ export default async function fetchPlaylistInfoAsync(playlistId: string) {
   let tracksWithArtists = getTrackArtists(playlistData);
   let playlistInfo = {
     name: playlistData.body.name,
-    imageUrl: playlistData.body.images[0].url,
+    imageUrl: playlistData.body.images[0]!.url,
     genres: await getPlaylistGenresAsync(tracksWithArtists),
   };
 

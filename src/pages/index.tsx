@@ -15,7 +15,7 @@ const Home: NextPage = () => {
 
   const { data, isLoading } = trpc.useQuery([
     'get-playlist-info',
-    { playlistId: '37i9dQZF1DXcxqeQiwUf1T' },
+    { playlistId: '3E7Al9fIhLXoNb2L9xg9S2' },
   ]);
 
   return (
@@ -73,7 +73,7 @@ function Searchbar({
   return (
     <>
       <div>
-        <form action="/playlist-genre" method="get">
+        <form action="/playlist" method="get">
           <input
             type="text"
             name="link"
