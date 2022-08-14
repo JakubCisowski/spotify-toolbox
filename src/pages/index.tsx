@@ -8,16 +8,6 @@ import { trpc } from '../utils/trpc';
 const Home: NextPage = () => {
   const [playlistLink, setPlaylistLink] = useState('');
 
-  // const { data, isLoading } = trpc.useQuery([
-  //   'example.hello',
-  //   { text: 'from tRPC' },
-  // ]);
-
-  const { data, isLoading } = trpc.useQuery([
-    'get-playlist-info',
-    { playlistId: '3E7Al9fIhLXoNb2L9xg9S2' },
-  ]);
-
   return (
     <>
       <Head>
@@ -25,8 +15,6 @@ const Home: NextPage = () => {
         <meta name="description" content="Spotify toolbox website" />
         <link rel="icon" href="/website-icon.ico" />
       </Head>
-
-      <div>{data ? <p>{JSON.stringify(data)}</p> : <p>Loading..</p>}</div>
 
       <div className="body-wrapper">
         <div className="logo">
