@@ -8,6 +8,7 @@ export const exampleRouter = createRouter().query('hello', {
     })
     .nullish(),
   resolve({ input }) {
+    console.log('hello1');
     return {
       greeting: `Hello ${input?.text ?? 'world'}`,
     };

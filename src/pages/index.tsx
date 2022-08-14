@@ -13,10 +13,10 @@ const Home: NextPage = () => {
   //   { text: 'from tRPC' },
   // ]);
 
-  // const { data, isLoading } = trpc.useQuery([
-  //   'get-playlist-info',
-  //   { playlistId: '37i9dQZF1DXcxqeQiwUf1T' },
-  // ]);
+  const { data, isLoading } = trpc.useQuery([
+    'get-playlist-info',
+    { playlistId: '37i9dQZF1DXcxqeQiwUf1T' },
+  ]);
 
   return (
     <>
@@ -26,7 +26,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/website-icon.ico" />
       </Head>
 
-      {/* <div>{data ? <p>{data.greeting}</p> : <p>Loading..</p>}</div> */}
+      <div>{data ? <p>{JSON.stringify(data)}</p> : <p>Loading..</p>}</div>
 
       <div className="body-wrapper">
         <div className="logo">
