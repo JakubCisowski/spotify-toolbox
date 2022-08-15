@@ -7,7 +7,7 @@ const PlaylistPage: NextPage = () => {
   const router = useRouter();
   let id = (router.query.link as string)?.substring(34, 56);
 
-  const { data, isLoading, error } = trpc.useQuery([
+  const { data, isLoading, error, isSuccess } = trpc.useQuery([
     'get-playlist-info',
     { playlistId: id },
   ]);

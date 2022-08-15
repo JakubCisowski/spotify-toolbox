@@ -30,6 +30,7 @@ hr {
 .body-wrapper {
   width: 50%;
   margin: 40px auto;
+  min-height: 1400px;
 }
 
 .logo {
@@ -42,6 +43,7 @@ hr {
   width: 100%;
   min-height: 50px;
   font-size: 25px;
+  text-align: center;
 }
 
 .searchbar-button-wrapper {
@@ -84,4 +86,5 @@ hr {
 .image-wrapper {
   display: flex;
   justify-content: center;
+  margin-bottom: 70px;
 }
