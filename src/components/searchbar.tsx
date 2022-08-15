@@ -1,3 +1,7 @@
+import { useRouter } from 'next/router';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export default function Searchbar({
   playlistLink,
   onPlaylistLinkChange,
@@ -5,10 +9,45 @@ export default function Searchbar({
   playlistLink: string;
   onPlaylistLinkChange: (playlistLink: string) => void;
 }) {
+  const router = useRouter();
+
+  const showError = () =>
+    toast.error('Invalid playlist link!', {
+      position: 'top-center',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+
+    if (playlistLink.length != 76) {
+      showError();
+      return;
+    }
+
+    router.push(`/playlist?link=${playlistLink}`);
+  };
+
   return (
     <>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable
+        pauseOnHover
+      />
+
       <div>
-        <form action="/playlist" method="get">
+        <form onSubmit={handleSubmit} method="get">
           <input
             type="text"
             name="link"

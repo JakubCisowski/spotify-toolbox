@@ -59,7 +59,7 @@ const Genres = ({ playlistData }: { playlistData: any }) => {
       </div>
 
       <div className="grid-container">{resultRows}</div>
-      {unclassified.count > 0 ? (
+      {unclassified?.count > 0 ? (
         <p className="unclassified-text red-text">
           unclassified tracks: <b>{unclassified.percentage}</b>
           <span className="percentage-text">%</span>
