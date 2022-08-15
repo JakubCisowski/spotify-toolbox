@@ -4,10 +4,31 @@ import type { AppRouter } from '../server/router';
 import type { AppType } from 'next/dist/shared/lib/utils';
 import superjson from 'superjson';
 import '../styles/globals.css';
-import '../styles/home.css';
+import '../styles/index.css';
+import '../styles/playlist.css';
+import Logo from '../components/logo';
+import { useState } from 'react';
+import Searchbar from '../components/searchbar';
 
 const MyApp: AppType = ({ Component, pageProps }) => {
-  return <Component {...pageProps} />;
+  const [playlistLink, setPlaylistLink] = useState('');
+  return (
+    <>
+      <div className="body-wrapper">
+        <div className="logo">
+          <Logo />
+        </div>
+        <div className="searchbar">
+          <Searchbar
+            playlistLink={playlistLink}
+            onPlaylistLinkChange={setPlaylistLink}
+          />
+        </div>
+        <hr></hr>
+        <Component {...pageProps} />
+      </div>
+    </>
+  );
 };
 
 const getBaseUrl = () => {

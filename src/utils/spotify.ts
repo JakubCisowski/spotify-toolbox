@@ -106,6 +106,9 @@ async function getPlaylistGenresAsync(tracksWithArtists: string[][]) {
     return x;
   });
 
+  // Sort by percentage and then by genre name length
+  genreCountsArray.sort((a, b) => b.percentage - a.percentage);
+
   // Add unclassified tracks info;
   // todo: Maybe pass this info separately
   var unclassifiedTracks = 0;

@@ -6,8 +6,6 @@ import { useState } from 'react';
 import { trpc } from '../utils/trpc';
 
 const Home: NextPage = () => {
-  const [playlistLink, setPlaylistLink] = useState('');
-
   return (
     <>
       <Head>
@@ -16,72 +14,12 @@ const Home: NextPage = () => {
         <link rel="icon" href="/website-icon.ico" />
       </Head>
 
-      <div className="body-wrapper">
-        <div className="logo">
-          <Logo />
-        </div>
-        <div className="searchbar">
-          <Searchbar
-            playlistLink={playlistLink}
-            onPlaylistLinkChange={setPlaylistLink}
-          />
-        </div>
-        <hr></hr>
-        <div className="tutorial">
-          <Tutorial />
-        </div>
+      <div className="tutorial">
+        <Tutorial />
       </div>
     </>
   );
 };
-
-function Logo() {
-  return (
-    <>
-      <Link href="/">
-        <a>
-          <div className="logo-text">
-            <span className="green-text">spotify</span> toolbox
-          </div>
-          <br></br>
-          <div className="logo-subtext">• find playlist genre •</div>
-        </a>
-      </Link>
-    </>
-  );
-}
-
-function Searchbar({
-  playlistLink,
-  onPlaylistLinkChange,
-}: {
-  playlistLink: string;
-  onPlaylistLinkChange: (playlistLink: string) => void;
-}) {
-  return (
-    <>
-      <div>
-        <form action="/playlist" method="get">
-          <input
-            type="text"
-            name="link"
-            placeholder="paste spotify playlist link here"
-            value={playlistLink}
-            onChange={(e) => onPlaylistLinkChange(e.target.value)}
-            className="searchbar"
-          />
-          <div className="searchbar-button-wrapper">
-            <input
-              type="submit"
-              value="analyze!"
-              className="searchbar-button"
-            />
-          </div>
-        </form>
-      </div>
-    </>
-  );
-}
 
 function Tutorial() {
   return (
@@ -139,7 +77,7 @@ function Tutorial() {
       <p className="tutorial-text">
         <span className="green-text">
           <b>70</b>
-          <span className="percentage">% </span>
+          <span className="percentage-text">% </span>
         </span>
         this means that 70% of the tracks* in this playlist are classified by
         Spotify as a certain genre of music

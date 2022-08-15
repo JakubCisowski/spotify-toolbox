@@ -1,0 +1,43 @@
+.loading-wrapper {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  justify-content: center;
+  grid-column-gap: 30px;
+}
+
+.grid-item {
+}
+
+.grid-item-left {
+  text-align: right;
+}
+
+.grid-item-right {
+}
+
+.grid-text {
+  margin: 0;
+  font-size: 30px;
+}
+
+.genres-header {
+  font-size: 40px;
+  text-align: center;
+}
+
+.unclassified-text {
+  margin: 40px 0 0 0;
+  font-size: 30px;
+  text-align: center;
+}
+
+.playlist-image-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
