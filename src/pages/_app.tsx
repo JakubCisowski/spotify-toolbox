@@ -11,7 +11,6 @@ import { useState } from 'react';
 import Searchbar from '../components/searchbar';
 
 const MyApp: AppType = ({ Component, pageProps }) => {
-  const [playlistLink, setPlaylistLink] = useState('');
   return (
     <>
       <div className="body-wrapper">
@@ -19,10 +18,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
           <Logo />
         </div>
         <div className="searchbar">
-          <Searchbar
-            playlistLink={playlistLink}
-            onPlaylistLinkChange={setPlaylistLink}
-          />
+          <Searchbar />
         </div>
         <hr></hr>
         <Component {...pageProps} />

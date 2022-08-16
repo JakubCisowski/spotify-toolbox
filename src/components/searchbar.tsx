@@ -1,14 +1,10 @@
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function Searchbar({
-  playlistLink,
-  onPlaylistLinkChange,
-}: {
-  playlistLink: string;
-  onPlaylistLinkChange: (playlistLink: string) => void;
-}) {
+export default function Searchbar() {
+  const [playlistLink, setPlaylistLink] = useState('');
   const router = useRouter();
 
   const showError = () =>
@@ -53,7 +49,7 @@ export default function Searchbar({
             name="link"
             placeholder="paste spotify playlist link here"
             value={playlistLink}
-            onChange={(e) => onPlaylistLinkChange(e.target.value)}
+            onChange={(e) => setPlaylistLink(e.target.value)}
             className="searchbar"
           />
           <div className="searchbar-button-wrapper">
