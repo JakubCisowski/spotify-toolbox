@@ -2,15 +2,18 @@ import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { trpc } from '../utils/trpc';
 import Image from 'next/image';
+import { useState } from 'react';
 
 const PlaylistPage: NextPage = () => {
   const router = useRouter();
   let id = (router.query.link as string)?.substring(34, 56);
 
-  const { data, isLoading, error, isSuccess } = trpc.useQuery([
-    'get-playlist-info',
-    { playlistId: id },
-  ]);
+  const { data, isLoading, error, isSuccess } = trpc.useQuery(
+    ['get-playlist-info', { playlistId: id }],
+    {
+      retry: false,
+    }
+  );
 
   if (isLoading) {
     return <Loading />;
@@ -29,7 +32,7 @@ const Genres = ({ playlistData }: { playlistData: any }) => {
 
   for (let i = 0; i < playlistData.genres.length && i < 10; i++) {
     resultRows.push(
-      <div className="grid-item grid-item-left">
+      <div key={i + '-percentage'} className="grid-item grid-item-left">
         <p className="grid-text">
           <span className="green-text">
             <b>{playlistData.genres[i].percentage}</b>
@@ -39,7 +42,7 @@ const Genres = ({ playlistData }: { playlistData: any }) => {
       </div>
     );
     resultRows.push(
-      <div className="grid-item grid-item-right">
+      <div key={i + '-name'} className="grid-item grid-item-right">
         <p className="grid-text">→ {playlistData.genres[i].genreName}</p>
       </div>
     );
