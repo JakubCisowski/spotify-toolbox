@@ -1,4 +1,4 @@
-import SpotifyWebApi from 'spotify-web-api-node'; //? change to import
+import SpotifyWebApi from 'spotify-web-api-node';
 
 var spotifyApi = new SpotifyWebApi({
   clientId: process.env.SPOTIFY_CLIENT_ID,

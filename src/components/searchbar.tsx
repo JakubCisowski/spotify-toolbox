@@ -22,17 +22,6 @@ export default function Searchbar() {
       draggable: true,
     });
 
-  const handleChange = (newText: string, e: any) => {
-    setPlaylistLink(newText);
-
-    console.log(newText);
-
-    // if (newText.length == 76) {
-    //   console.log('1 !');
-    //   handleSubmit(e);
-    // }
-  };
-
   const handleSubmit = (e: any) => {
     e.preventDefault();
 
