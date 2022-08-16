@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { trpc } from '../utils/trpc';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 const PlaylistPage: NextPage = () => {
   const router = useRouter();
@@ -28,7 +28,12 @@ const PlaylistPage: NextPage = () => {
 
 const Genres = ({ playlistData }: { playlistData: any }) => {
   const resultRows = [];
+  let myRef = useRef<HTMLDivElement>(null);
   let unclassified = playlistData.genres.pop();
+
+  let scroll = () => {
+    window.scrollTo({ behavior: 'smooth', top: myRef.current!.offsetTop - 60 });
+  };
 
   for (let i = 0; i < playlistData.genres.length && i < 10; i++) {
     resultRows.push(
@@ -49,7 +54,7 @@ const Genres = ({ playlistData }: { playlistData: any }) => {
   }
 
   return (
-    <div className="genres-wrapper">
+    <div ref={myRef} onLoad={scroll} className="genres-wrapper">
       <p className="genres-header">{playlistData.name}</p>
       <div className="playlist-image-wrapper">
         <Image
