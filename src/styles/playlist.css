@@ -41,3 +41,10 @@
   justify-content: center;
   margin-bottom: 20px;
 }
+
+.error-text {
+  color: red;
+  font-size: 30px;
+  text-align: center;
+  margin-top: 100px;
+}

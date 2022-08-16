@@ -91,7 +91,11 @@ const Loading = () => {
 };
 
 const Error = () => {
-  return <>Error</>;
+  return (
+    <>
+      <p className="error-text">Invalid playlist link!</p>
+    </>
+  );
 };
 
 export default PlaylistPage;
