@@ -12,31 +12,31 @@ async function authorize() {
 
 export default async function fetchPlaylistInfoAsync(playlistId: string) {
   await authorize();
-  let playlistData = await spotifyApi.getPlaylist(playlistId);
-  let tracksWithArtists = getTrackArtists(playlistData);
+  let dataBody = (await spotifyApi.getPlaylist(playlistId)).body;
+  let tracksWithArtists = getTrackArtists(dataBody);
   let playlistInfo = {
-    name: playlistData.body.name,
-    imageUrl: playlistData.body.images[0]!.url,
+    name: dataBody.name,
+    imageUrl: dataBody.images[0]!.url,
     genres: await getPlaylistGenresAsync(tracksWithArtists),
   };
 
   return playlistInfo;
 }
 
-function getTrackArtists(playlistData: any) {
+function getTrackArtists(playlistData: SpotifyApi.SinglePlaylistResponse) {
   var tracksWithArtists: string[][] = [];
-  var tracks = playlistData.body.tracks;
+  var tracks = playlistData.tracks;
   for (var i = 0; i < tracks.items.length; i++) {
     // Each track
     var trackWithArtists: string[] = [];
-    var track = tracks.items[i].track;
+    var track = tracks.items[i]!.track;
     if (track == null) {
       continue;
     }
     for (var j = 0; j < track.artists.length; j++) {
       // Each artist in track
-      if (track.artists[j].name.length > 0 && track.artists[j].id != null) {
-        trackWithArtists.push(track.artists[j].id);
+      if (track.artists[j]!.name.length > 0 && track.artists[j]!.id != null) {
+        trackWithArtists.push(track.artists[j]!.id);
       }
     }
     if (trackWithArtists.length > 0) {
@@ -59,12 +59,12 @@ async function getPlaylistGenresAsync(tracksWithArtists: string[][]) {
     for (let trackArtistId of trackObject) {
       await spotifyApi
         .getArtist(trackArtistId)
-        .then(function (data: any) {
+        .then(function (data) {
           for (var genre of data.body.genres) {
             trackWithGenre.push(genre);
           }
         })
-        .catch((err: any) => console.log(err));
+        .catch((err) => console.log(err));
     }
 
     let trackWithDistinctGenres = trackWithGenre.filter(function (item, pos) {

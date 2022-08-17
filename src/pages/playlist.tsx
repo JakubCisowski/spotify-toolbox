@@ -19,16 +19,25 @@ const PlaylistPage: NextPage = () => {
     return <Loading />;
   }
 
-  if (error) {
+  if (error || data == undefined) {
     return <Error />;
   }
 
   return <Genres playlistData={data} />;
 };
 
-const Genres = ({ playlistData }: { playlistData: any }) => {
+const Genres = ({
+  playlistData,
+}: {
+  playlistData: {
+    name: string;
+    imageUrl: string;
+    genres: { genreName: string; count: number; percentage: number }[];
+  };
+}) => {
   const resultRows = [];
   let myRef = useRef<HTMLDivElement>(null);
+
   let unclassified = playlistData.genres.pop();
 
   let scroll = () => {
@@ -40,7 +49,7 @@ const Genres = ({ playlistData }: { playlistData: any }) => {
       <div key={i + '-percentage'} className="grid-item grid-item-left">
         <p className="grid-text">
           <span className="green-text">
-            <b>{playlistData.genres[i].percentage}</b>
+            <b>{playlistData.genres[i]!.percentage}</b>
             <span className="percentage-text">%</span>
           </span>
         </p>
@@ -48,7 +57,7 @@ const Genres = ({ playlistData }: { playlistData: any }) => {
     );
     resultRows.push(
       <div key={i + '-name'} className="grid-item grid-item-right">
-        <p className="grid-text">→ {playlistData.genres[i].genreName}</p>
+        <p className="grid-text">→ {playlistData.genres[i]!.genreName}</p>
       </div>
     );
   }
@@ -67,9 +76,9 @@ const Genres = ({ playlistData }: { playlistData: any }) => {
       </div>
 
       <div className="grid-container">{resultRows}</div>
-      {unclassified?.count > 0 ? (
+      {unclassified!.count > 0 ? (
         <p className="unclassified-text red-text">
-          unclassified tracks: <b>{unclassified.percentage}</b>
+          unclassified tracks: <b>{unclassified!.percentage}</b>
           <span className="percentage-text">%</span>
         </p>
       ) : (
