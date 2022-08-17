@@ -38,15 +38,15 @@ function Tutorial() {
         ></Image>
       </div>
 
-      <p className="tutorial-text">2) paste it and click analyze</p>
+      <p className="tutorial-text">2) paste it here</p>
 
       <div className="image-wrapper">
         <Image
-          src="https://i.imgur.com/XqQUuMo.gif"
+          src="https://i.imgur.com/RolCFB5.png"
           alt="tutorial2"
           className="tutorial-screenshot"
-          width={1142}
-          height={137}
+          width={1033}
+          height={88}
         ></Image>
       </div>
 
@@ -54,11 +54,11 @@ function Tutorial() {
 
       <div className="image-wrapper">
         <Image
-          src="https://i.imgur.com/UnSukGJ.gif"
+          src="https://i.imgur.com/7YUxMTt.gif"
           alt="tutorial3"
           className="tutorial-screenshot"
-          width={425}
-          height={162}
+          width={459}
+          height={231}
         ></Image>
       </div>
 
@@ -66,11 +66,11 @@ function Tutorial() {
 
       <div className="image-wrapper">
         <Image
-          src="https://i.imgur.com/JBV1uiX.png"
+          src="https://i.imgur.com/MLD8kRC.png"
           alt="tutorial4"
           className="tutorial-screenshot"
-          width={422}
-          height={694}
+          width={499}
+          height={766}
         ></Image>
       </div>
 
