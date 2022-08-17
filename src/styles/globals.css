@@ -32,6 +32,15 @@ hr {
   margin: 40px auto;
 }
 
+/* mobile body layout */
+@media only screen and (max-width: 960px) {
+  .body-wrapper {
+    margin: 40px 0;
+    width: 100%;
+    padding: 10px;
+  }
+}
+
 .logo {
   text-align: center;
   margin: 30px 0;
