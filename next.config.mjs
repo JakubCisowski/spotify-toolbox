@@ -16,6 +16,6 @@ export default defineNextConfig({
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['i.imgur.com', 'i.scdn.co'],
+    domains: ['i.imgur.com', 'i.scdn.co', 'mosaic.scdn.co'],
   },
 });

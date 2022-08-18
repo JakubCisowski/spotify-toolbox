@@ -13,6 +13,7 @@ const PlaylistPage: NextPage = () => {
     ['get-playlist-info', { playlistId: id }],
     {
       retry: false,
+      staleTime: Infinity, // ? maybe it shouldnt be infinite, but since nobody uses my website it doesn't matter
     }
   );
 
@@ -37,7 +38,7 @@ const Genres = ({
   };
 }) => {
   useEffect(() => {
-    document.title = playlistData.name;
+    document.title = `${playlistData.name} • spotify toolbox`;
   });
 
   const resultRows = [];
@@ -97,7 +98,7 @@ const Genres = ({
 
 const Loading = () => {
   useEffect(() => {
-    document.title = 'loading...';
+    document.title = 'loading... • spotify toolbox';
   });
   return (
     <>
@@ -111,7 +112,7 @@ const Loading = () => {
 
 const Error = () => {
   useEffect(() => {
-    document.title = 'error!';
+    document.title = 'error • spotify toolbox';
   });
   return (
     <>
