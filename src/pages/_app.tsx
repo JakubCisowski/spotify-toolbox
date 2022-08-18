@@ -9,10 +9,15 @@ import '../styles/playlist.css';
 import Logo from '../components/logo';
 import { useState } from 'react';
 import Searchbar from '../components/searchbar';
+import Head from 'next/head';
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <>
+      <Head>
+        <title>spotify toolbox</title>
+        <link rel="icon" href="/website_icon.png" />
+      </Head>
       <div className="body-wrapper">
         <div className="logo">
           <Logo />

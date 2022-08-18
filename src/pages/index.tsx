@@ -8,12 +8,6 @@ import { trpc } from '../utils/trpc';
 const Home: NextPage = () => {
   return (
     <>
-      <Head>
-        <title>spotify toolbox</title>
-        <meta name="description" content="Spotify toolbox website" />
-        <link rel="icon" href="/website-icon.ico" />
-      </Head>
-
       <div className="tutorial">
         <Tutorial />
       </div>

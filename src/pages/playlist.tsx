@@ -2,7 +2,8 @@ import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { trpc } from '../utils/trpc';
 import Image from 'next/image';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import Head from 'next/head';
 
 const PlaylistPage: NextPage = () => {
   const router = useRouter();
@@ -35,10 +36,12 @@ const Genres = ({
     genres: { genreName: string; count: number; percentage: number }[];
   };
 }) => {
+  useEffect(() => {
+    document.title = playlistData.name;
+  });
+
   const resultRows = [];
   let myRef = useRef<HTMLDivElement>(null);
-
-  let unclassified = playlistData.genres.pop();
 
   let scroll = () => {
     window.scrollTo({ behavior: 'smooth', top: myRef.current!.offsetTop - 60 });
@@ -62,33 +65,40 @@ const Genres = ({
     );
   }
 
-  return (
-    <div ref={myRef} onLoad={scroll} className="genres-wrapper">
-      <p className="genres-header">{playlistData.name}</p>
-      <div className="playlist-image-wrapper">
-        <Image
-          src={playlistData.imageUrl}
-          alt="playlist"
-          className="playlist-image"
-          width={200}
-          height={200}
-        />
-      </div>
+  let unclassified = playlistData.genres.pop();
 
-      <div className="grid-container">{resultRows}</div>
-      {unclassified!.count > 0 ? (
-        <p className="unclassified-text red-text">
-          unclassified tracks: <b>{unclassified!.percentage}</b>
-          <span className="percentage-text">%</span>
-        </p>
-      ) : (
-        <></>
-      )}
-    </div>
+  return (
+    <>
+      <div ref={myRef} onLoad={scroll} className="genres-wrapper">
+        <p className="genres-header">{playlistData.name}</p>
+        <div className="playlist-image-wrapper">
+          <Image
+            src={playlistData.imageUrl}
+            alt="playlist"
+            className="playlist-image"
+            width={200}
+            height={200}
+          />
+        </div>
+
+        <div className="grid-container">{resultRows}</div>
+        {unclassified!.count > 0 ? (
+          <p className="unclassified-text red-text">
+            unclassified tracks: <b>{unclassified!.percentage}</b>
+            <span className="percentage-text">%</span>
+          </p>
+        ) : (
+          <></>
+        )}
+      </div>
+    </>
   );
 };
 
 const Loading = () => {
+  useEffect(() => {
+    document.title = 'loading...';
+  });
   return (
     <>
       <div className="loading-wrapper">
@@ -100,6 +110,9 @@ const Loading = () => {
 };
 
 const Error = () => {
+  useEffect(() => {
+    document.title = 'error!';
+  });
   return (
     <>
       <p className="error-text">Invalid playlist link!</p>

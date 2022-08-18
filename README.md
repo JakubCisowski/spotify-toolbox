@@ -4,7 +4,7 @@
 
 Website with tools related to Spotify API rebuilt with [React.js](https://reactjs.org/) (with [Next.js](https://nextjs.org/), [tRPC](https://trpc.io/) and more using [T3 stack](https://github.com/t3-oss/create-t3-app)).
 
-Previous version of this website was build with Node.js and Express.js - [LINK](https://github.com/JakubCisowski/spotify-toolbox-node)
+Previous version of this website was built with Node.js and Express.js - [LINK](https://github.com/JakubCisowski/spotify-toolbox-node)
 
 Current features: Determining Spotifty playlist genre
 
