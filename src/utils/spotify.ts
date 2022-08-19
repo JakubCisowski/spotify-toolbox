@@ -1,6 +1,6 @@
 import SpotifyWebApi from 'spotify-web-api-node';
 
-var spotifyApi = new SpotifyWebApi({
+const spotifyApi = new SpotifyWebApi({
   clientId: process.env.SPOTIFY_CLIENT_ID,
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
 });
@@ -10,80 +10,72 @@ async function authorize() {
   spotifyApi.setAccessToken(authorizationResponse.body.access_token);
 }
 
-async function getAllSongs(id: string) {
-  var data = await spotifyApi.getPlaylistTracks(id);
-  var numBatches = Math.floor(data.body.total / 100) + 1;
+export default async function fetchPlaylistInfo(playlistId: string) {
+  await authorize();
+  let playlistInfo = await spotifyApi.getPlaylist(playlistId);
+  let playlistAllTracks = await fetchAllSongs(playlistId);
+
+  return {
+    name: playlistInfo.body.name,
+    imageUrl: playlistInfo.body.images[0]!.url,
+    genres: await fetchPlaylistGenres(playlistAllTracks),
+  };
+}
+
+async function fetchAllSongs(playlistId: string) {
+  var data = await spotifyApi.getPlaylistTracks(playlistId);
+  var batchesAmount = Math.floor(data.body.total / 100) + 1;
   var promises = [];
-  for (let batchNum = 0; batchNum < numBatches; batchNum++) {
-    var promise = getSongs(id, batchNum * 100);
+  for (let batchNum = 0; batchNum < batchesAmount; batchNum++) {
+    var promise = await spotifyApi.getPlaylistTracks(playlistId, {
+      offset: batchNum * 100,
+    });
     promises.push(promise);
   }
-  var rawSongData = await Promise.all(promises);
 
+  var rawSongData = await Promise.all(promises);
   var songs: SpotifyApi.PlaylistTrackObject[] = [];
   for (let i = 0; i < rawSongData.length; i++) {
     if (rawSongData[i] != undefined) {
       songs = songs.concat(rawSongData[i]!.body.items);
     }
   }
+
   return songs;
 }
 
-async function getSongs(id: string, offset: number) {
-  var songs = await spotifyApi.getPlaylistTracks(id, { offset: offset });
-  return songs;
-}
-
-export default async function fetchPlaylistInfoAsync(playlistId: string) {
-  await authorize();
-  let playlistBody = (await spotifyApi.getPlaylist(playlistId)).body;
-
-  let playlistAllTracks = await getAllSongs(playlistId); // ! działa
-
-  console.log(
-    '0.5. getAllSongs() returns that many tracks: ' + playlistAllTracks.length
-  );
-
-  let playlistInfo = {
-    name: playlistBody.name,
-    imageUrl: playlistBody.images[0]!.url,
-    genres: await getPlaylistGenresAsync(playlistAllTracks),
-  };
-
-  return playlistInfo;
-}
-
-async function getPlaylistGenresAsync(
-  tracks: SpotifyApi.PlaylistTrackObject[]
-) {
+async function fetchPlaylistGenres(tracks: SpotifyApi.PlaylistTrackObject[]) {
   var tracksArtistIds: string[][] = [];
-  let artistsIdsUnique: string[] = []; // ? for genre finding optimalziation
+  let artistsIds: string[] = [];
 
   for (var i = 0; i < tracks.length; i++) {
     // Each track
-    var ids: string[] = [];
+    var trackArtistIds: string[] = [];
     var track = tracks[i]!.track;
     if (track == null) {
       continue;
     }
     for (var j = 0; j < track.artists.length; j++) {
+      let artist = track.artists[j]!;
       // Each artist in track
-      if (track.artists[j]!.name.length > 0 && track.artists[j]!.id != null) {
-        ids.push(track.artists[j]!.id);
+      if (artist.name.length > 0 && artist.id != null) {
+        trackArtistIds.push(artist.id);
       }
 
-      if (!artistsIdsUnique.includes(track.artists[j]!.id)) {
-        artistsIdsUnique.push(track.artists[j]!.id);
+      if (!artistsIds.includes(artist.id)) {
+        artistsIds.push(artist.id);
       }
     }
-    if (ids.length > 0) {
-      tracksArtistIds.push(ids);
+    if (trackArtistIds.length > 0) {
+      tracksArtistIds.push(trackArtistIds);
     }
   }
 
   let artistGenres: { artistId: string; genres: string[] }[] = [];
 
-  for (let artistId of artistsIdsUnique) {
+  for (let artistId of artistsIds) {
+    // ? Potential 429 status code fix, but not sure if it's needed.
+    // ? https://github.com/thelinmichael/spotify-web-api-node/issues/217#issuecomment-870130885
     await spotifyApi
       .getArtist(artistId)
       .then(function (data) {
@@ -92,7 +84,7 @@ async function getPlaylistGenresAsync(
       .catch((err) => console.log(err));
   }
 
-  let tracksWithGenres: string[][] = [];
+  let tracksGenres: string[][] = [];
 
   for (let track of tracksArtistIds) {
     let trackGenres: string[] = [];
@@ -104,74 +96,63 @@ async function getPlaylistGenresAsync(
         }
       }
     }
-    tracksWithGenres.push(trackGenres);
+    tracksGenres.push(trackGenres);
   }
 
-  // todo
-  // https://github.com/thelinmichael/spotify-web-api-node/issues/217#issuecomment-870130885
-  // Tutaj trzeba dodać takie coś do catcha tylko, że tam jest TypeScript
-  // Wyskakuje err 429, bo za duzo requestow i musimy wkorzystac retry after z settimeoutem. (moze wystarczy tylko jedna proba wiec uproszczone)
+  return countGenresPercentage(tracksGenres);
+}
 
-  // todo cleanup to wszystko
-
-  var genreCountsArray: {
+function countGenresPercentage(tracksGenres: string[][]) {
+  var genreAmounts: {
     genreName: string;
     count: number;
     percentage: number;
   }[] = [];
 
-  for (var i = 0; i < tracksWithGenres.length; i++) {
-    for (var j = 0; j < tracksWithGenres[i]!.length; j++) {
-      let genreObjectOldArray = tracksWithGenres[i]![j];
-      let genreObjectNewArray = genreCountsArray.find(
-        (x) => x.genreName === genreObjectOldArray
+  for (var i = 0; i < tracksGenres.length; i++) {
+    for (var j = 0; j < tracksGenres[i]!.length; j++) {
+      let genreName = tracksGenres[i]![j];
+      let genreAmountsElement = genreAmounts.find(
+        (x) => x.genreName === genreName
       );
 
-      if (genreObjectNewArray === undefined) {
-        genreCountsArray.push({
-          genreName: genreObjectOldArray!,
+      if (genreAmountsElement === undefined) {
+        genreAmounts.push({
+          genreName: genreName!,
           count: 1,
           percentage: 0,
         });
       } else {
-        genreObjectNewArray.count++;
+        genreAmountsElement.count++;
       }
     }
   }
 
-  // Calculate percentage of each genre
-  genreCountsArray = genreCountsArray.map((x) => {
-    x.percentage = Math.round((x.count / tracksWithGenres.length) * 100);
-    return x;
-  });
-
-  // Sort by percentage and then by genre name length
-  genreCountsArray.sort((a, b) => b.percentage - a.percentage);
+  // Calculate percentage of each genre and sort
+  genreAmounts = genreAmounts
+    .map((x) => {
+      x.percentage = Math.round((x.count / tracksGenres.length) * 100);
+      return x;
+    })
+    .sort((a, b) => b.percentage - a.percentage);
 
   // Add unclassified tracks info;
-  // todo: Maybe pass this info separately
-  var unclassifiedTracks = 0;
-  for (var i = 0; i < tracksWithGenres.length; i++) {
-    if (tracksWithGenres[i]!.length == 0) {
-      unclassifiedTracks++;
+  // ? Maybe pass this info separately
+  var unclassifiedTracksAmount = 0;
+  for (var i = 0; i < tracksGenres.length; i++) {
+    if (tracksGenres[i]!.length == 0) {
+      unclassifiedTracksAmount++;
     }
   }
   var unclassifiedTracksPercentage = Math.round(
-    (unclassifiedTracks / tracksWithGenres.length) * 100
+    (unclassifiedTracksAmount / tracksGenres.length) * 100
   );
 
-  genreCountsArray.push({
+  genreAmounts.push({
     genreName: 'unclassified',
-    count: unclassifiedTracks,
+    count: unclassifiedTracksAmount,
     percentage: unclassifiedTracksPercentage,
   });
 
-  console.log(
-    '3. getPlaylistGenresAsync() returns that many tracks: ' +
-      tracksWithGenres.length
-  );
-
-  return genreCountsArray;
+  return genreAmounts;
 }
-
-export {};

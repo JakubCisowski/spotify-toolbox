@@ -2,7 +2,7 @@
 import { createRouter } from './context';
 import superjson from 'superjson';
 import { z } from 'zod';
-import fetchPlaylistInfoAsync from '../../utils/spotify';
+import fetchPlaylistInfo from '../../utils/spotify';
 import { trpc } from '../../utils/trpc';
 import { TRPCError } from '@trpc/server';
 
@@ -14,7 +14,7 @@ export const appRouter = createRouter()
     }),
     async resolve({ input }) {
       try {
-        const playlistInfo = await fetchPlaylistInfoAsync(input.playlistId);
+        const playlistInfo = await fetchPlaylistInfo(input.playlistId);
         return playlistInfo;
       } catch {
         throw new TRPCError({
