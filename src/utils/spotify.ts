@@ -10,71 +10,110 @@ async function authorize() {
   spotifyApi.setAccessToken(authorizationResponse.body.access_token);
 }
 
+async function getAllSongs(id: string) {
+  var data = await spotifyApi.getPlaylistTracks(id);
+  var numBatches = Math.floor(data.body.total / 100) + 1;
+  var promises = [];
+  for (let batchNum = 0; batchNum < numBatches; batchNum++) {
+    var promise = getSongs(id, batchNum * 100);
+    promises.push(promise);
+  }
+  var rawSongData = await Promise.all(promises);
+
+  var songs: SpotifyApi.PlaylistTrackObject[] = [];
+  for (let i = 0; i < rawSongData.length; i++) {
+    if (rawSongData[i] != undefined) {
+      songs = songs.concat(rawSongData[i]!.body.items);
+    }
+  }
+  return songs;
+}
+
+async function getSongs(id: string, offset: number) {
+  var songs = await spotifyApi.getPlaylistTracks(id, { offset: offset });
+  return songs;
+}
+
 export default async function fetchPlaylistInfoAsync(playlistId: string) {
   await authorize();
-  let dataBody = (await spotifyApi.getPlaylist(playlistId)).body;
-  let tracksWithArtists = getTrackArtists(dataBody);
+  let playlistBody = (await spotifyApi.getPlaylist(playlistId)).body;
+
+  let playlistAllTracks = await getAllSongs(playlistId); // ! działa
+
+  console.log(
+    '0.5. getAllSongs() returns that many tracks: ' + playlistAllTracks.length
+  );
+
   let playlistInfo = {
-    name: dataBody.name,
-    imageUrl: dataBody.images[0]!.url,
-    genres: await getPlaylistGenresAsync(tracksWithArtists),
+    name: playlistBody.name,
+    imageUrl: playlistBody.images[0]!.url,
+    genres: await getPlaylistGenresAsync(playlistAllTracks),
   };
 
   return playlistInfo;
 }
 
-function getTrackArtists(playlistData: SpotifyApi.SinglePlaylistResponse) {
-  var tracksWithArtists: string[][] = [];
-  var tracks = playlistData.tracks;
-  for (var i = 0; i < tracks.items.length; i++) {
+async function getPlaylistGenresAsync(
+  tracks: SpotifyApi.PlaylistTrackObject[]
+) {
+  var tracksArtistIds: string[][] = [];
+  let artistsIdsUnique: string[] = []; // ? for genre finding optimalziation
+
+  for (var i = 0; i < tracks.length; i++) {
     // Each track
-    var trackWithArtists: string[] = [];
-    var track = tracks.items[i]!.track;
+    var ids: string[] = [];
+    var track = tracks[i]!.track;
     if (track == null) {
       continue;
     }
     for (var j = 0; j < track.artists.length; j++) {
       // Each artist in track
       if (track.artists[j]!.name.length > 0 && track.artists[j]!.id != null) {
-        trackWithArtists.push(track.artists[j]!.id);
+        ids.push(track.artists[j]!.id);
+      }
+
+      if (!artistsIdsUnique.includes(track.artists[j]!.id)) {
+        artistsIdsUnique.push(track.artists[j]!.id);
       }
     }
-    if (trackWithArtists.length > 0) {
-      tracksWithArtists.push(trackWithArtists);
+    if (ids.length > 0) {
+      tracksArtistIds.push(ids);
     }
   }
-  return tracksWithArtists;
-}
 
-async function getPlaylistGenresAsync(tracksWithArtists: string[][]) {
-  var tracksWithGenres: string[][] = [];
+  let artistGenres: { artistId: string; genres: string[] }[] = [];
 
-  for (let trackObject of tracksWithArtists) {
-    var trackWithGenre: string[] = [];
-
-    // todo
-    // https://github.com/thelinmichael/spotify-web-api-node/issues/217#issuecomment-870130885
-    // Tutaj trzeba dodać takie coś do catcha tylko, że tam jest TypeScript
-    // Wyskakuje err 429, bo za duzo requestow i musimy wkorzystac retry after z settimeoutem. (moze wystarczy tylko jedna proba wiec uproszczone)
-    for (let trackArtistId of trackObject) {
-      await spotifyApi
-        .getArtist(trackArtistId)
-        .then(function (data) {
-          for (var genre of data.body.genres) {
-            trackWithGenre.push(genre);
-          }
-        })
-        .catch((err) => console.log(err));
-    }
-
-    let trackWithDistinctGenres = trackWithGenre.filter(function (item, pos) {
-      return trackWithGenre.indexOf(item) == pos;
-    });
-
-    tracksWithGenres.push(trackWithDistinctGenres);
+  for (let artistId of artistsIdsUnique) {
+    await spotifyApi
+      .getArtist(artistId)
+      .then(function (data) {
+        artistGenres.push({ artistId: artistId, genres: data.body.genres });
+      })
+      .catch((err) => console.log(err));
   }
 
-  // Take tracksWithGenres and create an array of genres and amount of times they appear
+  let tracksWithGenres: string[][] = [];
+
+  for (let track of tracksArtistIds) {
+    let trackGenres: string[] = [];
+    for (let artistId of track) {
+      for (let genre of artistGenres.find((x) => x.artistId == artistId)!
+        .genres) {
+        if (!trackGenres.includes(genre)) {
+          trackGenres.push(genre);
+        }
+      }
+    }
+    tracksWithGenres.push(trackGenres);
+  }
+
+  // todo
+  // https://github.com/thelinmichael/spotify-web-api-node/issues/217#issuecomment-870130885
+  // Tutaj trzeba dodać takie coś do catcha tylko, że tam jest TypeScript
+  // Wyskakuje err 429, bo za duzo requestow i musimy wkorzystac retry after z settimeoutem. (moze wystarczy tylko jedna proba wiec uproszczone)
+
+  // todo cleanup to wszystko
+
   var genreCountsArray: {
     genreName: string;
     count: number;
@@ -126,6 +165,11 @@ async function getPlaylistGenresAsync(tracksWithArtists: string[][]) {
     count: unclassifiedTracks,
     percentage: unclassifiedTracksPercentage,
   });
+
+  console.log(
+    '3. getPlaylistGenresAsync() returns that many tracks: ' +
+      tracksWithGenres.length
+  );
 
   return genreCountsArray;
 }
