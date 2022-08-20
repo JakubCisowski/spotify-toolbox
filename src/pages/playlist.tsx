@@ -48,12 +48,14 @@ const Genres = ({
     window.scrollTo({ behavior: 'smooth', top: myRef.current!.offsetTop - 60 });
   };
 
-  for (let i = 0; i < playlistData.genres.length && i < 10; i++) {
+  for (let i = 0; i < playlistData.genres.length - 1 && i < 10; i++) {
+    let percentage = playlistData.genres[i]!.percentage;
+    if (percentage == 0) break;
     resultRows.push(
       <div key={i + '-percentage'} className="grid-item grid-item-left">
         <p className="grid-text">
           <span className="green-text">
-            <b>{playlistData.genres[i]!.percentage}</b>
+            <b>{percentage}</b>
             <span className="percentage-text">%</span>
           </span>
         </p>
@@ -66,7 +68,8 @@ const Genres = ({
     );
   }
 
-  let unclassified = playlistData.genres.pop();
+  let unclassifiedPercentage =
+    playlistData.genres[playlistData.genres.length - 1]?.percentage;
 
   return (
     <>
@@ -83,9 +86,9 @@ const Genres = ({
         </div>
 
         <div className="grid-container">{resultRows}</div>
-        {unclassified!.count > 0 ? (
+        {unclassifiedPercentage! > 0 ? (
           <p className="unclassified-text red-text">
-            unclassified tracks: <b>{unclassified!.percentage}</b>
+            unclassified tracks: <b>{unclassifiedPercentage}</b>
             <span className="percentage-text">%</span>
           </p>
         ) : (
