@@ -39,6 +39,9 @@ hr {
     width: 100%;
     padding: 10px;
   }
+  .grid-container {
+    grid-template-columns: 1fr 10fr !important;
+  }
 }
 
 .logo {

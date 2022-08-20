@@ -107,7 +107,7 @@ const Loading = () => {
     <>
       <div className="loading-wrapper">
         <Image src="/loading.svg" alt="loading" width={200} height={200} />
-        <p> for large playlists this might take up to 1 minute </p>
+        <p>for large playlists this might take up to 10 seconds</p>
       </div>
     </>
   );
@@ -119,7 +119,10 @@ const Error = () => {
   });
   return (
     <>
-      <p className="error-text">Invalid playlist link!</p>
+      <p className="error-text">
+        too large playlist, is it over 1500 songs?<br></br>
+        or invalid playlist link!
+      </p>
     </>
   );
 };

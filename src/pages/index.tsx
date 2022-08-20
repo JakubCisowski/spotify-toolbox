@@ -48,11 +48,11 @@ function Tutorial() {
 
       <div className="image-wrapper">
         <Image
-          src="https://i.imgur.com/7YUxMTt.gif"
+          src="https://i.imgur.com/lpZv9Cp.gif"
           alt="tutorial3"
           className="tutorial-screenshot"
-          width={459}
-          height={231}
+          width={520}
+          height={256}
         ></Image>
       </div>
 
