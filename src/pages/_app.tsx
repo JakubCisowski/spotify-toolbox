@@ -12,8 +12,6 @@ import Searchbar from '../components/searchbar';
 import Head from 'next/head';
 
 const MyApp: AppType = ({ Component, pageProps }) => {
-  const [isLoading, setIsLoading] = useState(false);
-
   return (
     <>
       <Head>
@@ -25,10 +23,10 @@ const MyApp: AppType = ({ Component, pageProps }) => {
           <Logo />
         </div>
         <div className="searchbar">
-          <Searchbar isLoading={isLoading} />
+          <Searchbar />
         </div>
         <hr></hr>
-        <Component {...pageProps} setIsLoading={setIsLoading} />
+        <Component {...pageProps} />
       </div>
     </>
   );

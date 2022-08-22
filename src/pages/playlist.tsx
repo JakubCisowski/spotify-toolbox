@@ -5,11 +5,7 @@ import Image from 'next/image';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import Head from 'next/head';
 
-export default function PlaylistPage({
-  setIsLoading,
-}: {
-  setIsLoading: Dispatch<SetStateAction<Boolean>>;
-}) {
+export default function PlaylistPage() {
   const router = useRouter();
   let id = (router.query.link as string)?.substring(34, 56);
 
@@ -22,11 +18,8 @@ export default function PlaylistPage({
   );
 
   if (isLoading) {
-    setIsLoading(true);
     return <Loading />;
   }
-
-  setIsLoading(false);
 
   if (error || data == undefined) {
     return <Error />;
