@@ -29,7 +29,7 @@ SPOTIFY_CLIENT_SECRET=
 
 ## Screenshots
 
-![scr](https://i.imgur.com/cDTlDcr.png)
+![scr](https://i.imgur.com/YrW3HXA.png)
 
 ![scr](https://i.imgur.com/MLD8kRC.png)
 
