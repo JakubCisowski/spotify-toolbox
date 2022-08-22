@@ -2,10 +2,14 @@ import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { trpc } from '../utils/trpc';
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import Head from 'next/head';
 
-const PlaylistPage: NextPage = () => {
+export default function PlaylistPage({
+  setIsLoading,
+}: {
+  setIsLoading: Dispatch<SetStateAction<Boolean>>;
+}) {
   const router = useRouter();
   let id = (router.query.link as string)?.substring(34, 56);
 
@@ -18,15 +22,18 @@ const PlaylistPage: NextPage = () => {
   );
 
   if (isLoading) {
+    setIsLoading(true);
     return <Loading />;
   }
+
+  setIsLoading(false);
 
   if (error || data == undefined) {
     return <Error />;
   }
 
   return <Genres playlistData={data} />;
-};
+}
 
 const Genres = ({
   playlistData,
@@ -126,5 +133,3 @@ const Error = () => {
     </>
   );
 };
-
-export default PlaylistPage;

@@ -3,7 +3,7 @@ import { FormEventHandler, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function Searchbar() {
+export default function Searchbar({ isLoading }: { isLoading: boolean }) {
   const [playlistLink, setPlaylistLink] = useState('');
   const router = useRouter();
 
@@ -63,6 +63,7 @@ export default function Searchbar() {
               type="submit"
               value="analyze!"
               className="searchbar-button"
+              disabled={isLoading}
             />
           </div>
         </form>
