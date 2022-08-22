@@ -1,10 +1,9 @@
 // src/server/router/index.ts
-import { createRouter } from './context';
+import { TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 import { z } from 'zod';
 import fetchPlaylistInfo from '../../utils/spotify';
-import { trpc } from '../../utils/trpc';
-import { TRPCError } from '@trpc/server';
+import { createRouter } from './context';
 
 export const appRouter = createRouter()
   .transformer(superjson)

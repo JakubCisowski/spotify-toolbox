@@ -1,15 +1,14 @@
 // src/pages/_app.tsx
 import { withTRPC } from '@trpc/next';
-import type { AppRouter } from '../server/router';
 import type { AppType } from 'next/dist/shared/lib/utils';
+import Head from 'next/head';
 import superjson from 'superjson';
+import Logo from '../components/logo';
+import Searchbar from '../components/searchbar';
+import type { AppRouter } from '../server/router';
 import '../styles/globals.css';
 import '../styles/index.css';
 import '../styles/playlist.css';
-import Logo from '../components/logo';
-import { useState } from 'react';
-import Searchbar from '../components/searchbar';
-import Head from 'next/head';
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (

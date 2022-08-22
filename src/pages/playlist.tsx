@@ -1,15 +1,13 @@
-import type { NextPage } from 'next';
-import { useRouter } from 'next/router';
-import { trpc } from '../utils/trpc';
 import Image from 'next/image';
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
-import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useEffect, useRef } from 'react';
+import { trpc } from '../utils/trpc';
 
 export default function PlaylistPage() {
   const router = useRouter();
   let id = (router.query.link as string)?.substring(34, 56);
 
-  const { data, isLoading, error, isSuccess } = trpc.useQuery(
+  const { data, isLoading, error } = trpc.useQuery(
     ['get-playlist-info', { playlistId: id }],
     {
       retry: false,
