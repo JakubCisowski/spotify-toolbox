@@ -1,6 +1,6 @@
 # Spotify Toolbox
 
-[Link to website](https://spotify-toolbox-hqggvznll-ivan-pavlov.vercel.app/)
+[Link to website](https://spotify-toolbox-ivan-pavlov.vercel.app/)
 
 Website with tools related to Spotify API rebuilt with [React.js](https://reactjs.org/) (with [Next.js](https://nextjs.org/), [tRPC](https://trpc.io/) and more using [T3 stack](https://github.com/t3-oss/create-t3-app)).
 
@@ -10,7 +10,7 @@ Current features: Determining Spotifty playlist genre
 
 ## How to use it
 
-Go to my website hosted by [Vercel](https://vercel.com/): [LINK](https://spotify-toolbox-hqggvznll-ivan-pavlov.vercel.app/)
+Go to my website hosted by [Vercel](https://vercel.com/): [LINK](https://spotify-toolbox-ivan-pavlov.vercel.app/)
 
 Just follow 'how it works' section on home page!
 
